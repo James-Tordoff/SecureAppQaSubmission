@@ -71,19 +71,6 @@ namespace SecureAppQaTests
         public async Task AddUserToRoles_Test()
         {
             //Arrange - Go get your variables, whatever you need, your classes, functions etc
-
-            // Arrange
-            //https://stackoverflow.com/questions/55412776/how-to-mock-usermanageridentityuser
-            //var store = new Mock<IUserStore<IdentityUser>>();
-            //store.Setup(x => x.FindByIdAsync("123", CancellationToken.None))
-            //    .ReturnsAsync(new IdentityUser()
-            //    {
-            //        UserName = "test@email.com",
-            //        Id = "123"
-            //    });
-
-            //var mgr = new UserManager<IdentityUser>(store.Object, null, null, null, null, null, null, null, null);
-
             var mockUser = new Mock<UserManager<IdentityUser>>();
 
             //Act - Execute the function I want to test
@@ -95,42 +82,77 @@ namespace SecureAppQaTests
 
 
             NUnit.Framework.Assert.True(addUserRoles);
-
-            //return ffff;
         }
 
         [Test]
         public void GetSingleUsers()
         {
+            //Arrange
             _dbcontext = new SecureAppQaDbContext();
+
+            //Act
             var adminUser = _dbcontext.AspNetUsers.Where(o => o.Email == "admin@test.com");
 
             NUnit.Framework.Assert.IsNotNull(adminUser);
         }
 
         [Test]
-        public async Task GetCustomerRoles() 
-        {           
+        public void Get2FAUsers()
+        {
+            //Arrange
             _dbcontext = new SecureAppQaDbContext();
 
+            //Act
+            var twoFactorAuthUsers = _dbcontext.AspNetUsers.Where(o => o.TwoFactorEnabled == true).ToList();
+
+            //Assert
+            NUnit.Framework.Assert.IsNotNull(twoFactorAuthUsers);
+        }
+
+
+        [Test]
+        public void GetNone2FAUsers()
+        {
+            //Arrange
+            _dbcontext = new SecureAppQaDbContext();
+
+            //Act
+            var noneTwoFactorAuthUsers = _dbcontext.AspNetUsers.Where(o => o.TwoFactorEnabled == false).ToList();
+            
+            //Assert
+            NUnit.Framework.Assert.IsNotNull(noneTwoFactorAuthUsers);
+        }
+
+
+        [Test]
+        public async Task GetCustomerRoles() 
+        {
+            //Arrange
+            _dbcontext = new SecureAppQaDbContext();
+
+            //Act
             var customerAccount = _dbcontext.AspNetUsers.Where(o => o.Email == "user1@test.com");
             var customerRoles = customerAccount.First().Roles;
 
             bool isCustomerInRole = customerRoles.Where(o => o.Name == "User").Any();
 
+            //Assert
             NUnit.Framework.Assert.True(isCustomerInRole);
         }
 
         [Test]
         public void GetAdminRoles()
         {
+            //Arrange
             _dbcontext = new SecureAppQaDbContext();
 
+            //Act
             var adminAccount = _dbcontext.AspNetUsers.Where(o => o.Email == "admin@test.com");
             var adminRoles = adminAccount.First().Roles;
 
             bool isAdminInRole = adminRoles.Where(o => o.Name == "Admin").Any();
 
+            //Assert
             NUnit.Framework.Assert.True(isAdminInRole);
         }
     

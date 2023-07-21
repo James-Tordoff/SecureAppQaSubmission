@@ -17,9 +17,13 @@ namespace SecureAppQaTests
         [Test]
         public void GetTickets()
         {
+            //Arrange
             _dbcontext = new SecureAppQaDbContext();
+
+            //Act
             var list = _dbcontext.Tickets.ToList();
 
+            //Assert
             NUnit.Framework.Assert.IsNotNull(list);
         }
 
@@ -27,6 +31,7 @@ namespace SecureAppQaTests
         [TestProperty("ExecutionOrder", "1")]
         public void AddNewTicket()
         {
+            //Arrange
             _dbcontext = new SecureAppQaDbContext();
             AspNetUser user = _dbcontext.AspNetUsers.First();
             Ticket ticket = new Ticket()
@@ -38,9 +43,11 @@ namespace SecureAppQaTests
                 IsActive = true,
             };
 
+            //Act
             _dbcontext.Tickets.Add(ticket);
             var result = _dbcontext.SaveChanges();
 
+            //Assert
             NUnit.Framework.Assert.True(result == 1);
         }
 
@@ -48,11 +55,13 @@ namespace SecureAppQaTests
         [TestProperty("ExecutionOrder", "2")]
         public void GetTicketDetails()
         {
+            //Arrange
             _dbcontext = new SecureAppQaDbContext();
 
+            //Act
             Ticket myTicket = _dbcontext.Tickets.Where(o => o.Subject == "Test Subject").Last();
 
-
+            //Assert
             NUnit.Framework.Assert.True(myTicket != null);
         }
 
@@ -60,15 +69,17 @@ namespace SecureAppQaTests
         [TestProperty("ExecutionOrder", "3")]
         public void EditTicket()
         {
+            //Arrange
             _dbcontext = new SecureAppQaDbContext();
-            AspNetUser user = _dbcontext.AspNetUsers.First();
-            //Ticket myTicket = _dbcontext.Tickets.Find("9bb1449b-668a-4ae4-a270-bd0b2606a62e");
+            AspNetUser user = _dbcontext.AspNetUsers.First();            
             Ticket myTicket = _dbcontext.Tickets.OrderBy(o => o.DateCreated.ToString()).Last();
             myTicket.Subject = "I changed this";
 
+            //Act
             _dbcontext.Entry(myTicket).State = EntityState.Modified;
             var result = _dbcontext.SaveChanges();
 
+            //Assert
             NUnit.Framework.Assert.True(result == 1);
         }
 
@@ -76,7 +87,7 @@ namespace SecureAppQaTests
         [TestProperty("ExecutionOrder", "4")]
         public void DeleteTicket()
         {
-
+            //Arrange
             string guid = new Guid().ToString();
             _dbcontext = new SecureAppQaDbContext();
 
@@ -92,6 +103,7 @@ namespace SecureAppQaTests
                 IsActive = true,
             };
 
+            //Act
             _dbcontext.Tickets.Add(ticket);
             var addResult = _dbcontext.SaveChanges();
 
@@ -102,7 +114,110 @@ namespace SecureAppQaTests
             _dbcontext.Tickets.Remove(ticketToDelete);
             var deleteResult = _dbcontext.SaveChanges();
 
+            //Assert
             NUnit.Framework.Assert.True(deleteResult == 1);
+        }
+
+        [Test]        
+        public void TryAddBadTicketNoUser()
+        {
+            //In our Database - User, Subject, and Desc are all NOT NULL.
+            //Attempting to add a record with null values here should fail.
+
+            //Arrange
+            _dbcontext = new SecureAppQaDbContext();
+            AspNetUser user = _dbcontext.AspNetUsers.First();
+            Ticket ticket = new Ticket()
+            {
+                AspNetUserId = null,
+                DateCreated = DateTime.UtcNow,
+                Description = "Description",
+                Subject = "Subject",
+                IsActive = true,
+            };
+
+            //Act
+            int? result = null;
+            try
+            {
+                _dbcontext.Tickets.Add(ticket);
+                result = _dbcontext.SaveChanges();
+            }
+            catch
+            {
+                result = 0; 
+            }
+
+            //Assert
+            NUnit.Framework.Assert.True(result == 0);
+        }
+
+        [Test]
+        public void TryAddBadTicketNoDesc()
+        {
+            //In our Database - User, Subject, and Desc are all NOT NULL.
+            //Attempting to add a record with null values here should fail.
+
+            //Arrange
+            _dbcontext = new SecureAppQaDbContext();
+            AspNetUser user = _dbcontext.AspNetUsers.First();
+            Ticket ticket = new Ticket()
+            {
+                AspNetUserId = user.Id,
+                DateCreated = DateTime.UtcNow,
+                Description = null,
+                Subject = "Subject!",
+                IsActive = true,
+            };
+
+            //Act
+            int? result = null;
+            try
+            {
+                _dbcontext.Tickets.Add(ticket);
+                result = _dbcontext.SaveChanges();
+            }
+            catch
+            {
+                result = 0;
+            }
+
+            //Assert
+            NUnit.Framework.Assert.True(result == 0);
+        }
+
+        [Test]
+        public void TryAddBadTicketNoSubject()
+        {
+            //In our Database - User, Subject, and Desc are all NOT NULL.
+            //Attempting to add a record with null values here should fail.
+
+            //Arrange
+            _dbcontext = new SecureAppQaDbContext();
+            AspNetUser user = _dbcontext.AspNetUsers.First();
+            Ticket ticket = new Ticket()
+            {
+                AspNetUserId = user.Id,
+                DateCreated = DateTime.UtcNow,
+                Description = "Description!",
+                Subject = null,
+                IsActive = true,
+            };
+
+            //Act
+            int? result = null;
+            try
+            {
+                _dbcontext.Tickets.Add(ticket);
+                result = _dbcontext.SaveChanges();
+            }
+            catch
+            {
+                result = 0;
+            }
+
+            //Assert
+            NUnit.Framework.Assert.True(result == 0);
         }
     }
 }

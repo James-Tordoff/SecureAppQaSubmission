@@ -7,6 +7,7 @@ This template must be filled in for any and all work carried out within a projec
 
 | [Date](#date) | [CheckedIn](#checkedIn) | [Revision](#revision) | [Author](#author) | [Reason](#reason) | [Work Carried Out](#work-carried-out) | [Testing Done](#testing-done) | [Verification](#verification) | [Validation](#validation)| [Signatorys](#signatorys) | [Published](#published) |
 |:-----:|:-----:|:-----:|:-----:|-------|-------|------|------|------|:-------:|------|
+|21/07/23|Y|1|JT|Test Cases and Page Text|Added new Tests for Tickets and Users. Updated the About and Privacy page texts|Tested the tests in testing environment|N/A|N/A|JT|No|
 |20/07/23|Y|1|JT|Test Cases|Added new TicketTests test class and renamed UnitTests.cs to UserTests.cs to keep them organised.|Tested the tests in testing environment|N/A|N/A|JT|No|
 |06/07/23|Y|1|JT|Authorisation Improvements|Updated UserTickets to to ensure that users cannot access unauthorised tickets. Added a new UserError Page to allow me to send errors to a custom page rather than giving exceptions etc.|Tested in debug|N/A|N/A|JT|No|
 |05/07/23|Y|1|JT|Authorisation Improvements|Added Authorised Tags in UserTickets and Authorised(Admin) for ManagerTickets to ensure security.|Tested in debug with different user accounts to ensure the different authorisation levels for pages including trying to access pages they shouldnt be able to via urls|N/A|N/A|JT|No|
