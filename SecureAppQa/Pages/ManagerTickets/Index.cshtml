@@ -1,0 +1,57 @@
+﻿@page
+@model SecureAppQa.Pages.ManagerTickets.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Ticket[0].Subject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ticket[0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ticket[0].DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ticket[0].IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ticket[0].AspNetUser)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Ticket) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AspNetUser.Email)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

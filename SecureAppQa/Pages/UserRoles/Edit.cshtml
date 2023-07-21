@@ -1,0 +1,51 @@
+﻿@page
+@model SecureAppQa.Pages.UserRoles.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Change User Roles</h1>
+
+<h4>@Model._UserRolesEditVM.UserName</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="_UserRolesEditVM.UserId" />
+            <div class="form-group">
+                <label class="control-label">Current Roles</label>
+                <ejs-listview enable="true" id="listview" dataSource="Model.TenantUserRoleList">
+                    <e-listview-fieldsettings text="Text">
+                    </e-listview-fieldsettings>
+                </ejs-listview>
+            </div>
+            <br />
+
+            <div class="form-group">
+                <label class="control-label">Remove Roles</label>
+                <ejs-multiselect id="RemoveRoles" dataSource="Model.TenantUserRoleList" placeholder="Remove Roles" mode="Box">
+                    <e-multiselect-fields text="Text"></e-multiselect-fields>
+                </ejs-multiselect>
+            </div>
+            <br />
+            <div class="form-group">
+                <label class="control-label">Add Roles</label>
+                <ejs-multiselect id="AddRoles" dataSource="Model.TenantUserRolesAvailableList" placeholder="Available Roles" mode="Box">
+                <e-multiselect-fields text="Text"></e-multiselect-fields>
+                </ejs-multiselect>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
